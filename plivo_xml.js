@@ -26,8 +26,6 @@ Output :
 <Response>
   <Speak loop="2">Welcome to Plivo</Speak>
   <Play loop="2">http://examples.com/playTrumpet.mp3</Play>
-  <Wait length="3">
-    
-  </Wait>
+  <Wait length="3"/>
 </Response>
 */ 
