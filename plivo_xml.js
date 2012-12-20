@@ -1,31 +1,49 @@
-var p = require('./plivo');
-var p2 =  p.Response();
+var plivo = require('plivo');
+var r = plivo.Response();
 
-// Add Speak .....
+// Add Speak
 var body = 'Welcome to Plivo';
 var params = {'loop' : 2};
 
-p2.addSpeak(body, params);
+r.addSpeak(body, params);
 
-// Add Play .....
-p2.addPlay('http://examples.com/playTrumpet.mp3', params);
+// Add Play
+r.addPlay('http://examples.com/playTrumpet.mp3', params);
 
-// Add Wait .....
+// Add Wait
 var params = {'length' : 3};
+r.addWait(params);
 
-p2.addWait(params);
+// Add Dial
+var dialElement = r.addDial({
+    action: 'http://yourapp.com/dial',
+});
 
-// To Generate XML.....
-var xml = p2.toXML();
 
-// To Print on console.....
+// Add Number and User to previously added Dial
+dialElement.addNumber('107456967856');
+dialElement.addUser('sip:user1234@phone.plivo.com');
+dialElement.addNumber('107456967856');
+
+// Generate XML String
+var xml = r.toXML();
+
+// Print to console
 console.log(xml);
 
 /* 
-Output : 
+
+Output: 
+
 <Response>
   <Speak loop="2">Welcome to Plivo</Speak>
   <Play loop="2">http://examples.com/playTrumpet.mp3</Play>
   <Wait length="3"/>
+  <Dial action="http://yourapp.com/dial">
+    <Number>107456967856</Number>
+    <User>sip:user1234@phone.plivo.com</User>
+    <Number>107456967856</Number>
+  </Dial>
 </Response>
+
 */ 
