@@ -24,7 +24,7 @@ params = {
     'number': 'xxxxxxxxxxx',
 };
 
-p.get_number(params, function(status, response) {
+p.get_number_details(params, function(status, response) {
     console.log('Status: ', status);
     console.log('API Response:\n', response);
 });
