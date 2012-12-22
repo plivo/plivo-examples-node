@@ -1,9 +1,6 @@
 var plivo = require('plivo');
 
-var p = plivo.RestAPI();
-
-p.options.authId = "xxxxxx";
-p.options.authToken = "xxxxxx";
+var p = plivo.RestAPI(require('./config'));
 
 // Get all applications' details
 p.get_applications({}, function (status, response) {
