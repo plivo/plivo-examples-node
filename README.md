@@ -1,4 +1,4 @@
-plivo-examples-node
-===================
+Node.js examples for Plivo
+==========================
 
-Plivo node.js examples
+Thsi repository contains a number of Node.js examples for using the open-source [Plivo](http://plivo.com) telephony and SMS framework.
