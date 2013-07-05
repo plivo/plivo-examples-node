@@ -10,12 +10,18 @@ app.all('/forward/message/', function (req, res) {
 	else
 		console.log(req.query);
     var dst = req.param('ForwardTo') || "";
-    var src = req.param('From') || "";
+	var from = req.param('From') || "";
+	// Custom CLID is not allowed, so use Plivo DID instead.
+    var src = req.param('To') || "";
     var txt = req.param('Text') || "";
     var r = plivo.Response();
 
-    var params = {'src':src,'dst':dst};
-    r.addMessage(txt, params);
+	// Generate an XML response with <Message> tag, only if,
+	// all the mandatory attributes are available.
+	if (dst && src && txt) {
+		var params = {'src':src,'dst':dst};
+		r.addMessage('Message from ' + from + ': ' + txt, params);
+	}
 
     res.set({
         'Content-Type': 'text/xml'
