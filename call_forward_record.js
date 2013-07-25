@@ -1,10 +1,13 @@
-var plivo = require('plivo');
+var plivo = require('plivo-node');
 var express = require('express');
+var util = require('util');
 var app = express();
 
 app.use(express.bodyParser());
 
-app.all('/forward/call/', function (req, res) {
+var server_name = 'server_address';
+
+app.all('/forward/call', function (req, res) {
 	if (req.method == 'POST')
 		console.log(req.body);
 	else
@@ -16,7 +19,7 @@ app.all('/forward/call/', function (req, res) {
 
 	if (to_number && from_number) {
 		if (call_record == 'true') {
-			response.addRecord('', {action: 'http://server/path/to/url', startOnDialAnswer: 'true'});
+			response.addRecord({action: util.format('http://%s/call/record', server_name ), startOnDialAnswer: 'true'});
 		}
 		var dial = response.addDial({callerId: from_number});
 		dial.addNumber(to_number);
@@ -27,6 +30,18 @@ app.all('/forward/call/', function (req, res) {
     });
     res.end(response.toXML());
 
+});
+
+app.all('/call/record', function (req, res) {
+	if (req.method == 'POST')
+		console.log(req.body);
+	else
+		console.log(req.query);
+    res.set({
+        'Content-Type': 'text/plain'
+    });
+    res.end('OK');
+	
 });
 
 app.listen(5000);
