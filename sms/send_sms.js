@@ -7,7 +7,7 @@ var p = plivo.RestAPI({
 var params = {
     'src': '1111111111', // Sender's phone number with country code
     'dst' : '2222222222', // Receiver's phone Number with country code
-    'text' : "Hi, message from Plivo" // Your SMS Text Message - English
+    'text' : "Hi, message from Plivo", // Your SMS Text Message - English
     //'text' : "こんにちは、元気ですか？" // Your SMS Text Message - Japanese
     //'text' : "Ce est texte généré aléatoirement" // Your SMS Text Message - French
     'url' : "https://intense-brook-8241.herokuapp.com/report/", // The URL to which with the status of the message is sent
