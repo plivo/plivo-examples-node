@@ -1,17 +1,21 @@
-var plivo = require('plivo');
-var express = require('express');
+var plivo = require('plivo'); // npm install plivo
+var express = require('express'); // Utilizes Express 4. npm install express
+var bodyParser = require("body-parser"); // Body parsing middleware. npm install body-parser
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
-app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.all('/receive_sms/', function(request, response) {
-    // Sender's phone number
-    var from_number = request.param('From');
+app.set('port', (process.env.PORT || 3000));
+
+app.all('/receive_sms/', function(req, res) {
+    
+	// Sender's phone number
+    var from_number = req.body['From'];
     // Receiver's phone number - Plivo number
-    var to_number = request.param('To');
+    var to_number = req.body['To'];
     // The text which was received
-    var text = request.param('Text');
+    var text = req.body['Text'];
 
     console.log ('From : ' + from_number + ' To : ' + to_number + ' Text : ' + text);
 
