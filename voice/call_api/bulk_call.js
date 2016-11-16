@@ -1,7 +1,7 @@
 var plivo = require('plivo');
 var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
+  authId: process.env.authId,
+  authToken: process.env.authToken
 });
 
 var params = {
