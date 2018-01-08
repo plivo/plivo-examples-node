@@ -5,7 +5,7 @@ var p = plivo.RestAPI({
 });
 
 var params = {
-    'record_id': '005bcdf3-b1b9-4487-b8d3-59efb41431ca', // Message UUID for which the details have to be retrieved
+    'message_uuid': '005bcdf3-b1b9-4487-b8d3-59efb41431ca', // Message UUID for which the details have to be retrieved
 };
 
 p.get_message(params, function (status, response) {
