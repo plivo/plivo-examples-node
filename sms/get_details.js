@@ -1,25 +1,20 @@
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = {
-    'record_id': '005bcdf3-b1b9-4487-b8d3-59efb41431ca', // Message UUID for which the details have to be retrieved
-};
+(function main() {
+    'use strict';
+    var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
 
-p.get_message(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-    console.log('Units:', response['units']);
-    console.log('Status:', response['message_state']);
-});
+    client.messages.get("ce038b12-5a2b-11eb-8693-0242ac110004" // Message UUID for which the details have to be retrieved
+    ).then(function(response) {
+        console.log(response);
+        console.log(response.units);
+        console.log(response.messageState);
+    }, );
+})();
 
 /* 
 Sample Output
 
-Status:  200
-API Response:
  { api_id: '04402e56-142d-11e5-b483-22000afb8d0a',
   from_number: '1111111111',
   message_direction: 'outbound',

@@ -5,64 +5,54 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.all('/record_api/', function(request, response) {
+app.all('/record_api/', function(request, resp) {
     var getdigits_action_url = "https://intense-brook-8241.herokuapp.com/record_action/"
     var r = plivo.Response();
     var params = {
-        'action' : getdigits_action_url, // The URL to which the digits are sent
-        'method' : 'GET', // Submit to action URL using GET or POST
-        'timeout' : '7', // Time in seconds to wait to receive the first digit
-        'numDigits' : '1', // Maximum number of digits to be processed in the current operation
-        'retries' : '1', // Indicates the number of retries the user is allowed to input the digits
-        'redirect' : 'false' // Redirect to action URL if true
-    }   
+        'action': getdigits_action_url, // The URL to which the digits are sent
+        'method': 'GET', // Submit to action URL using GET or POST
+        'timeout': '7', // Time in seconds to wait to receive the first digit
+        'numDigits': '1', // Maximum number of digits to be processed in the current operation
+        'retries': '1', // Indicates the number of retries the user is allowed to input the digits
+        'redirect': 'false' // Redirect to action URL if true
+    }
     var getdigits = r.addGetDigits(params);
     getdigits.addSpeak("Press 1 to record this call");
 
-    // Time to wait in seconds
-    params = {'length': "30"};
-    response.addWait(params);
 
-    console.log (r.toXML());
+    console.log(r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 app.all('/record_action/', function(request, response) {
-    var digit = request.param('Digits');
-    var call_uuid = request.param('CallUUID');
-    console.log ("Call UUID : " + call_uuid);
-    console.log ("Digit pressed : " + digit);
+    var digit = request.params('Digits');
+    var call_uuid = request.params('CallUUID');
+    console.log("Call UUID : " + call_uuid);
+    console.log("Digit pressed : " + digit);
 
-    var auth_id = "Your AUTH_ID";
-    var auth_token = "Your AUTH_TOKEN";
 
-    var p = plivo.RestAPI(auth_id,auth_token);
-
-    if (digit == "1"){
-        params = {
-            'call_uuid' : call_uuid, // ID of the call
-        }
-        p.record(params, function (status, response) {
-            console.log('Status: ', status);
-            console.log('API Response:\n', response);
+    if (digit == "1") {
+        var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+        client.calls.record(
+            call_uuid, // call uuid
+        ).then(function(response) {
+            console.log(response);
+        }, function(err) {
+            console.error(err);
         });
-    }else {
-        console.log ("Wrong Input");
+    } else {
+        console.log("Wrong Input");
     }
 
 
     r.addSpeak('Congratulations! You did it!');
-    console.log (r.toXML());
+    console.log(r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
@@ -77,7 +67,6 @@ Sample Output
     <GetDigits action="https://intense-brook-8241.herokuapp.com/record_api_action" method="GET" numDigits="1" redirect="false" retries="1" timeout="7">
         <Speak>Press 1 to record this call</Speak>
     </GetDigits>
-    <Wait length="10"/>
 </Response>
 
 Status:  201
@@ -86,4 +75,9 @@ API Response:
     url: 'https://s3.amazonaws.com/recordings_2013/67673232-9594-11e4-baad-842b2b17453e.mp3"',
     recording_id: '16963644-9594-11e4-baad-842b2b17453e'
     message: 'call recording started', }
+
+The below XML will be exucted right after excuting the above API.
+<Response>
+    <Speak>Congratulations! You did it!</Speak>
+</Response>
 */

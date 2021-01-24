@@ -5,32 +5,38 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.all('/call_whisper/', function(request, response) {
-    var r = plivo.Response();
+// Generate a Hangup XML to reject an incoming call.
+
+app.all('/call_whisper/', function(request, resp) {
+    var response = plivo.Response();
 
     var params = {
-        'confirmSound' : "https://intense-brook-8241.herokuapp.com/confirm_sound/", // A remote URL fetched with POST HTTP request which must return an 
-                                                                                    // XML response with Play, Wait and/or Speak elements only.
-        'confirmKey' : "5" // The digit to be pressed by the called party to accept the call.
+        'confirmSound': "https://www.foo.com/confirm_sound/",
+        'confirmKey': "5"
     };
-    var d = r.addDial(params);
-    d.addNumber("1111111111");
-    d.addNumber("2222222222");
-    d.addNumber("3333333333");   
-    console.log (r.toXML());
+    var dial = response.addDial(params);
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var first_number = "1111111111";
+    dial.addNumber(first_number);
+
+    var second_number = "2222222222";
+    dial.addNumber(second_number);
+
+    var third_number = "3333333333";
+    dial.addNumber(third_number);
+
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 app.all('/confirm_sound/', function(request, response) {
     var r = plivo.Response();
-   
+
     r.addSpeak('Press 5 to answer the call');
-    console.log (r.toXML());
+    console.log(r.toXML());
 
     response.set({
         'Content-Type': 'text/xml'
@@ -47,7 +53,7 @@ app.listen(app.get('port'), function() {
 /*
 Sample Output
 <Response>
-    <Dial confirmSound="https://intense-brook-8241.herokuapp.com/confirm_sound/" confirmKey="5">
+    <Dial confirmSound="https://www.foo.com/confirm_sound/" confirmKey="5">
         <Number>1111111111</Number>
         <Number>2222222222</Number>
         <Number>3333333333</Number>

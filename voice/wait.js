@@ -7,7 +7,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Example for Basic Wait
 
-app.all('/basic_wait/', function(request, response) {
+app.all('/basic_wait/', function(request, resp) {
     var r = plivo.Response();
 
     r.addSpeak("I will wait for 10 seconds");
@@ -18,16 +18,14 @@ app.all('/basic_wait/', function(request, response) {
     r.addSpeak("I just waited 10 seconds");
     console.log (r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 // Example for Delayed Call Answer
 
-app.all('/delayed_wait/', function(request, response) {
+app.all('/delayed_wait/', function(request, resp) {
     var r = plivo.Response();
 
     var params = {
@@ -37,16 +35,14 @@ app.all('/delayed_wait/', function(request, response) {
     r.addSpeak("Hello");
     console.log (r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 // Example for Beep Detection
 
-app.all('/beep_det/', function(request, response) {
+app.all('/beep_det/', function(request, resp) {
     var r = plivo.Response();
 
     var params = {
@@ -57,10 +53,8 @@ app.all('/beep_det/', function(request, response) {
     r.addSpeak("Hello");
     console.log (r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 

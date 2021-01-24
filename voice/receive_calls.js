@@ -7,16 +7,17 @@ app.use(express.static(__dirname + '/public'));
 
 // Generate a Speak XML with the details of the text to play on the call.
 
-app.all('/speak/', function(request, response) {
-    var r = plivo.Response();
+app.all('/speak/', function(request, resp) {
 
-    r.addSpeak('Congratulations! You did it!');
-    console.log (r.toXML());
+    var response = plivo.Response();
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var speak_body = "Congratulations! You did it!";
+    response.addSpeak(speak_body);
+
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 

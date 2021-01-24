@@ -5,42 +5,40 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.all('/voicemail/', function(request, response) {    
+app.all('/voicemail/', function(request, response) {
     // Generate a Record XML and ask the caller to leave
     // a message.
 
     // The recorded file will be sent to the 'action' URL
     var record_params = {
         'action': "https://intense-brook-8241.herokuapp.com/save_record_url/", // Submit the result of the record to this URL
-        'method' : "GET", // HTTP method to submit the action URL
+        'method': "GET", // HTTP method to submit the action URL
         'maxLength': '30', // Maximum number of seconds to record 
-        'transcriptionType' : 'auto', // The type of transcription required
-        'transcriptionUrl' : "https://intense-brook-8241.herokuapp.com/transcription/", // The URL where the transcription while be sent from Plivo
-        'transcriptionMethod' : 'GET' // The method used to invoke transcriptionUrl
+        'transcriptionType': 'auto', // The type of transcription required
+        'transcriptionUrl': "https://intense-brook-8241.herokuapp.com/transcription/", // The URL where the transcription while be sent from Plivo
+        'transcriptionMethod': 'GET' // The method used to invoke transcriptionUrl
     }
 
     var r = plivo.Response();
     r.addSpeak("Leave your message after the tone")
     r.addRecord(record_params)
-    console.log (r.toXML());
+    console.log(r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 // Action URL Example
 app.all('/save_record_url/', function(request, response) {
-    var record_url = request.param('RecordUrl');    
-    console.log ('Record Url : ' + record_url );
+    var record_url = request.params('RecordUrl');
+    console.log('Record Url : ' + record_url);
 });
 
 // Transcription URL Example
 app.all('/transcription/', function(request, response) {
-    var transcription = request.param('transcription');    
-    console.log ('Transcription is : ' + transcription );
+    var transcription = request.params('transcription');
+    console.log('Transcription is : ' + transcription);
 });
 
 app.listen(app.get('port'), function() {

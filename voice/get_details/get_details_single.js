@@ -1,36 +1,30 @@
+// Example for LiveCall get
+
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = { 
-    'call_uuid' : '55309cee-821d-11e4-9a73-498d468c930b' // ID of the call.
-};
-
-// Prints the complete response
-p.get_cdr(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+(function main() {
+    'use strict';
+    
+    var client = new plivo.Client("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+    client.calls.getLiveCall(
+        "eba53b9e-8fbd-45c1-9444-696d2172fbc8", // call uuid
+    ).then(function (response) {
+        console.log(response);
+    }, function (err) {
+        console.error(err);
+    });
+})();
 
 /*
 Sample  Output
-
-Status:  200
-API Response:
- { api_id: '51bdd1c2-5223-11e5-aa37-22000ac52edc',
-  bill_duration: 0,
-  billed_duration: 0,
-  call_direction: 'outbound',
-  call_duration: 0,
-  call_uuid: '55309cee-821d-11e4-9a73-498d468c930b',
-  end_time: '2014-12-12 22:09:02+05:30',
-  from_number: null,
-  parent_call_uuid: null,
-  resource_uri: '/v1/Account/XXXXXXXXXXXXXXX/Call/55309cee-821d-11e4-9a73-498d468c930b/',
-  to_number: '919176616491',
-  total_amount: '0.00000',
-  total_rate: '0.00000' }
-
+{
+  "direction": "inbound",
+  "from": "15856338537",
+  "call_status": "in-progress",
+  "api_id": "45223222-74f8-11e1-8ea7-12313806be9a",
+  "to": "14154290945",
+  "caller_name": "+15856338537",
+  "call_uuid": "6653422-91b6-4716-9fad-9463daaeeec2",
+  "session_start": "2014-03-23 14:49:39.722551" // Format: YYYY-MM-DD HH:mm:ss.sssss Timezone: UTC
+}
 */

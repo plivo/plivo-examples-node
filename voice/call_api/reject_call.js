@@ -7,21 +7,25 @@ app.use(express.static(__dirname + '/public'));
 
 // Generate a Hangup XML to reject an incoming call.
 
-app.all('/hangup/', function(request, response) {
-    var r = plivo.Response();
+app.all('/hangup/', function(request, resp) {
+    var response = plivo.Response();
+
+    var speak_params = {
+        'loop': "0"
+    };
+    var speak_body = "This call will be hung up after a minute";
+    response.addSpeak(speak_body, speak_params);
+
     var params = {
-        'reason': 'busy', // Specify the reason for hangup
-        'schedule': '60' // Schedule the hangup
-    }
+        'schedule': "60",
+        'reason': "rejected"
+    };
+    response.addHangup(params);
 
-    r.addSpeak('This call will be hung up in 1 minute');
-    r.addHangup(params);
-    console.log (r.toXML());
+    console.log(response.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 

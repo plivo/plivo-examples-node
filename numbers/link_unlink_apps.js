@@ -1,42 +1,48 @@
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-// Link an application to a number
-var params = { 
-    'number' : '12106706640', // Number that has to be linked to an application
-    'app_id' : '16638156474000802' // Application ID that has to be linked
-};
+(function main() {
+    'use strict';
+    
+    var client = new plivo.Client("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
 
-p.link_application_number(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+    // Link an application to a number
+    client.numbers.update(
+        "17609915566", // Number that has to be linked to an application
+        {
+          app_id: "77543232947799695", // Application ID that has to be linked
+        },
+    ).then(function (response) {
+        console.log(response);
+    }, function (err) {
+        console.error(err);
+    });
+})();
 
 /*
 Sample Output
-Status:  202
 API Response:
- { api_id: 'e9c0a382-6065-11e5-9968-22000abfb1f6',
-  message: 'changed' }
+{
+  "message": "changed",
+  "api_id": "5a9fcb68-582d-11e1-86da-6ff39efcb949"
+}
 */
 
 // Unlink an application from an number
-var params = { 
-    'number' : '12106706640' // Number that has to be unlikned to an application
-};
-
-p.unlink_application_number(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
+client.numbers.update(
+  "17609915566", // Number that has to be linked to an application
+  {
+    app_id: "", // Application ID that has to be linked
+  },
+).then(function (response) {
+  console.log(response);
+}, function (err) {
+  console.error(err);
 });
-
 /*
 Sample Output
-Status:  202
 API Response:
- { api_id: 'f54b0012-6065-11e5-9421-22000ac55bd1',
-  message: 'changed' }
+{
+  "message": "changed",
+  "api_id": "5a9fcb68-582d-11e1-86da-6ff39efcb949"
+}
 */

@@ -9,26 +9,26 @@ app.use(express.static(__dirname + '/public'));
 // The first call is made to the number in order, with a timeout value to 20s. 
 // If the call is not answered within 20s, Plivo will then dial out to the second number.
 
-app.all('/seq_dial/', function(request, response) {
-    var r = plivo.Response();
+app.all('/seq_dial/', function(request, resp) {
+
+    var response = plivo.Response();
 
     var params = {
-        'timeout' : "20", // The duration (in seconds) for which the called party has to be given a ring.
-        'action':"hhttps://intense-brook-8241.herokuapp.com/dial_status/" // Redirect to this URL after leaving Dial.
-    }
+        'timeout': "20", // The duration (in seconds) for which the called party has to be given a ring.
+        'action': "http://www.foo.com/dial_action" // Redirect to this URL after leaving Dial.
+    };
+    var first_dial = response.addDial(params);
+    var first_number = "1111111111";
+    first_dial.addNumber(first_number);
 
-    var d = r.addDial(params);
-    d.addNumber("1111111111");
+    var second_dial = response.addDial();
+    var second_number = "2222222222";
+    second_dial.addNumber(second_number);
 
-    var d2 = r.addDial()
-    d2.addNumber("2222222222");
+    console.log(response.toXML());
 
-    console.log (r.toXML());
-
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
@@ -40,7 +40,7 @@ app.listen(app.get('port'), function() {
 /*
 Sample Output
 <Response>
-    <Dial action="https://morning-ocean-4669.herokuapp.com/dial_status/" timeout="20">
+    <Dial timeout="20" action="http://www.foo.com/dial_action">
         <Number>1111111111</Number>
     </Dial>
     <Dial>
