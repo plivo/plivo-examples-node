@@ -1,4 +1,22 @@
 var plivo = require('plivo');
+
+(function main() {
+    'use strict';
+    
+    var client = new plivo.Client("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+    client.applications.list(
+        {
+            offset: 0, // The number of value items by which the results should be offset
+            limit: 5, // The number of results per page
+        },
+    ).then(function (response) {
+        console.log(response); // Prints the complete response
+        console.log('Next: ', response['meta']['next'])
+    }, function (err) {
+        console.error(err);
+    });
+})();
+var plivo = require('plivo');
 var p = plivo.RestAPI({
   authId: 'Your AUTH_ID',
   authToken: 'Your AUTH_TOKEN'
@@ -6,8 +24,8 @@ var p = plivo.RestAPI({
 
 // Get details of all applications
 var params = {
-    'limit' : '2', // The number of results per page
-    'offset' : '0' // The number of value items by which the results should be offset
+    'limit' : '2', 
+    'offset' : '0' 
 };
 p.get_applications(params, function (status, response) {
     console.log('Status: ', status);
@@ -17,50 +35,102 @@ p.get_applications(params, function (status, response) {
 
 /*
 Sample Output
-Status:  200
-API Response:
- { api_id: '034bc842-6050-11e5-a78c-22000abfa4f6',
-  meta: 
-   { limit: 2,
-     next: '/v1/Account/XXXXXXXXXXXXXXXXX/Application/?limit=2&offset=2',
-     offset: 0,
-     previous: null,
-     total_count: 8 },
-  objects: 
-   [ { answer_method: 'GET',
-       answer_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       app_id: '16632742496743552',
-       app_name: 'Direct Dial',
-       default_app: true,
-       default_endpoint_app: true,
-       enabled: true,
-       fallback_answer_url: '',
-       fallback_method: 'POST',
-       hangup_method: 'POST',
-       hangup_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       message_method: 'GET',
-       message_url: 'http://requestb.in/rnl6n7rn',
-       public_uri: true,
-       resource_uri: '/v1/Account/XXXXXXXXXXXXXXXXX/Application/16632742496743552/',
-       sip_uri: 'sip:16632742496743552@app.plivo.com',
-       sub_account: null },
-     { answer_method: 'GET',
-       answer_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       app_id: '27082215185108636',
-       app_name: 'Dial From Ramya',
-       default_app: false,
-       default_endpoint_app: false,
-       enabled: true,
-       fallback_answer_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       fallback_method: 'POST',
-       hangup_method: 'POST',
-       hangup_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       message_method: 'POST',
-       message_url: 'http://plivodirectdial.herokuapp.com/response/sip/route/?DialMusic=real&CLID=919176616491',
-       public_uri: true,
-       resource_uri: '/v1/Account/XXXXXXXXXXXXXXXXX/Application/27082215185108636/',
-       sip_uri: 'sip:27082215185108636@app.plivo.com',
-       sub_account: null } ] }
+{
+    "api_id": "05d17723-5984-11eb-9710-0242ac11000a",
+    "meta": {
+        "limit": 20,
+        "next": null,
+        "offset": 0,
+        "previous": null,
+        "total_count": 4
+    },
+    "objects": [
+        {
+            "answer_method": "GET",
+            "answer_url": "https://s3.amazonaws.com/plivosamplexml/conference_url.xml",
+            "app_id": "77543232947799695",
+            "app_name": "Demo Conference",
+            "application_type": "XML",
+            "default_app": false,
+            "default_endpoint_app": false,
+            "enabled": true,
+            "fallback_answer_url": "",
+            "fallback_method": "POST",
+            "hangup_method": "GET",
+            "hangup_url": "https://s3.amazonaws.com/plivosamplexml/conference_url.xml",
+            "log_incoming_message": true,
+            "message_method": "POST",
+            "message_url": "",
+            "public_uri": false,
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXX/Application/77543232947799695/",
+            "sip_uri": "sip:77543232947799695@app.plivo.com",
+            "sub_account": null
+        },
+        {
+            "answer_method": "GET",
+            "answer_url": "https://s3.amazonaws.com/plivosamplexml/play_url.xml",
+            "app_id": "77532213102675586",
+            "app_name": "Demo Play",
+            "application_type": "XML",
+            "default_app": false,
+            "default_endpoint_app": false,
+            "enabled": true,
+            "fallback_answer_url": null,
+            "fallback_method": "POST",
+            "hangup_method": "GET",
+            "hangup_url": "https://s3.amazonaws.com/plivosamplexml/play_url.xml",
+            "log_incoming_message": true,
+            "message_method": "POST",
+            "message_url": null,
+            "public_uri": false,
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXX/Application/77532213102675586/",
+            "sip_uri": "sip:77532213102675586@app.plivo.com",
+            "sub_account": null
+        },
+        {
+            "answer_method": "GET",
+            "answer_url": "http://callforward.herokuapp.com/forward/?Users=sip:xlite180426090329@phone.plivo.com",
+            "app_id": "77521409550435141",
+            "app_name": "Call Forward",
+            "application_type": "XML",
+            "default_app": false,
+            "default_endpoint_app": false,
+            "enabled": true,
+            "fallback_answer_url": "",
+            "fallback_method": "POST",
+            "hangup_method": "GET",
+            "hangup_url": "http://callforward.herokuapp.com/forward/?Numbers=NUMBER_1_HERE,NUMBER_2_HERE",
+            "log_incoming_message": true,
+            "message_method": "POST",
+            "message_url": "",
+            "public_uri": false,
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXX/Application/77521409550435141/",
+            "sip_uri": "sip:77521409550435141@app.plivo.com",
+            "sub_account": null
+        },
+        {
+            "answer_method": "GET",
+            "answer_url": "http://s3.amazonaws.com/static.plivo.com/answer.xml",
+            "app_id": "77494029089751836",
+            "app_name": "Demo Speak",
+            "application_type": "XML",
+            "default_app": false,
+            "default_endpoint_app": false,
+            "enabled": true,
+            "fallback_answer_url": "https://s3.amazonaws.com/plivosamplexml/fallback_url.xml",
+            "fallback_method": "GET",
+            "hangup_method": "POST",
+            "hangup_url": "https://s3.amazonaws.com/plivosamplexml/fallback_url.xml",
+            "log_incoming_message": true,
+            "message_method": "POST",
+            "message_url": "http://webhook.site/ac5c4327-4eb7-439a-8a43-ebdbf802651c",
+            "public_uri": false,
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXX/Application/77494029089751836/",
+            "sip_uri": "sip:77494029089751836@app.plivo.com",
+            "sub_account": null
+        }
+    ]
+}
        
 Next:  /v1/Account/XXXXXXXXXXXXXXXXX/Application/?limit=2&offset=2
 */

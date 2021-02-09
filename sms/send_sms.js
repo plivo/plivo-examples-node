@@ -1,36 +1,29 @@
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = {
-    'src': '1111111111', // Sender's phone number with country code
-    'dst' : '2222222222', // Receiver's phone Number with country code
-    'text' : "Hi, message from Plivo", // Your SMS Text Message - English
-    //'text' : "こんにちは、元気ですか？" // Your SMS Text Message - Japanese
-    //'text' : "Ce est texte généré aléatoirement" // Your SMS Text Message - French
-    'url' : "https://intense-brook-8241.herokuapp.com/report/", // The URL to which with the status of the message is sent
-    'method' : "GET" // The method used to call the url
-};
+(function main() {
+    'use strict';
+    var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+    client.messages.create(
+        "+14151113333", // Sender's phone number with country code
+        "+14151112222", // Receiver's phone Number with country code
+        "Hello, this is a sample text from Plivo", // Your SMS Text Message - English
+        // "こんにちは、元気ですか？" // Your SMS Text Message - Japanese
+        // "Ce est texte généré aléatoirement" // Your SMS Text Message - French
+        {
+            method: "GET", // Method used to trigger message URL.
+            url: "http://foo.com/sms_status/" // The URL to which with the status of the message is sent
+        },
 
-// Prints the complete response
-p.send_message(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+    ).then(function(response) {
+        console.log(response);
+    }, );
+})();
 
 /* 
 Sample Output
-
-Status:  202
-API Response:
- { api_id: 'b91b8736-134b-11e5-b0d7-22000ac520cd',
+{ 
+  api_id: 'b91b8736-134b-11e5-b0d7-22000ac520cd',
   message: 'message(s) queued',
-  message_uuid: [ '138ee55f-9efb-4fc3-8ad7-4d71219bf56c' ] }
-
-Message UUID:
- [ '138ee55f-9efb-4fc3-8ad7-4d71219bf56c' ]
-Api ID:
- b91b8736-134b-11e5-b0d7-22000ac520cd
+  message_uuid: [ '138ee55f-9efb-4fc3-8ad7-4d71219bf56c' ] 
+}
 */

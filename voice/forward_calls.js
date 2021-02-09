@@ -10,24 +10,26 @@ app.use(express.static(__dirname + '/public'));
 // The phone number of the person calling your Plivo number,
 // we'll use this as the Caller ID when we forward the call.
 
-app.all('/forward/', function(request, response) {
-    var r = plivo.Response();
+app.all('/forward/', function(request, resp) {
+    var response = plivo.Response();
 
-    var from_number = request.param('From');
+    var from_number = request.params('From');
+
     // The number you would like to forward the call to.
     var forwarding_number = "2222222222";
+
     var params = {
-        'callerId' : from_number // The phone number to be used as the caller id. It can be set to the from_number or any custom number.
+        'callerId': from_number // The phone number to be used as the caller id. It can be set to the from_number or any custom number.
     };
+    var dial = response.addDial(params);
 
-    var d = r.addDial(params);
-    d.addNumber(forwarding_number);
-    console.log (r.toXML());
+    var first_number = forwarding_number;
+    dial.addNumber(first_number);
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 

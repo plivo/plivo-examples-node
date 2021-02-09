@@ -8,19 +8,24 @@ app.use(express.static(__dirname + '/public'));
 // Simultaneous dialing is useful when there are SIP users and numbers that you want to dial. 
 // The first call that connects will cancel all other tries.
 
-app.all('/call_hunting/', function(request, response) {
-    var r = plivo.Response();
+app.all('/call_hunting/', function(request, resp) {
+    var response = plivo.Response();
 
-    var d = r.addDial();
-    d.addUser("sip:abcd1234@phone.plivo.com");
-    d.addNumber("2222222222");
-    d.addNumber("3333333333");
-    console.log (r.toXML());
+    var dial = response.addDial();
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var first_user = "sip:alice1234@phone.plivo.com";
+    dial.addUser(first_user);
+
+    var number = "1111111111";
+    dial.addNumber(number);
+
+    var second_user = "sip:john1234@phone.plivo.com";
+    dial.addUser(second_user);
+
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
@@ -33,9 +38,9 @@ app.listen(app.get('port'), function() {
 Sample Output
 <Response>
     <Dial>
-        <User>sip:abcd1234@phone.plivo.com</User>
-        <Number>2222222222</Number>
-        <Number>3333333333</Number>
+        <User>sip:alice1234@phone.plivo.com</User>
+        <Number>1111111111</Number>
+        <User>sip:john1234@phone.plivo.com</User>
     </Dial>
 </Response>
 */

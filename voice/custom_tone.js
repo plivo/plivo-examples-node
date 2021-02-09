@@ -8,36 +8,37 @@ app.use(express.static(__dirname + '/public'));
 // When an outbound call is made and then connected different number using Dial element, 
 // you can play a custom caller tone using the dialMusic attribute 
 
-app.all('/dial/', function(request, response) {
-    var r = plivo.Response();
+app.all('/dial/', function(request, resp) {
+    var response = plivo.Response();
 
     var params = {
-        'dialMusic' : "https://intense-brook-8241.herokuapp.com/custom_tone/" // Music to be played to the caller while the call is being connected.
+        'dialMusic': "https://www.foo.com/custom_tone/"
     };
-   
-    var d = r.addDial(params);
-    d.addNumber("1111111111");
-    console.log (r.toXML());
+    var dial = response.addDial(params);
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var first_number = "1111111111";
+    dial.addNumber(first_number);
+
+    console.log(response.toXML());
+
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 // Play XML is returned on the dialMusic Url
 
-app.all('/custom_tone/', function(request, response) {
-    var r = plivo.Response();
+app.all('/custom_tone/', function(request, resp) {
+    var response = plivo.Response();
 
-    r.addPlay("https://s3.amazonaws.com/plivocloud/music.mp3");
-    console.log (r.toXML());
+    var play_body = "https://s3.amazonaws.com/plivocloud/Trumpet.mp3";
+    response.addPlay(play_body);
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
@@ -45,17 +46,16 @@ app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
 });
 
-
 /*
 Sample Output
 <Response>
-    <Dial dialMusic="https://intense-brook-8241.herokuapp.com/custom_tone/">
+    <Dial dialMusic="https://www.foo.com/custom_tone/">
         <Number>1111111111</Number>
     </Dial>
-</Response> 
+</Response>
 
 <Response>
-    <Play>https://s3.amazonaws.com/plivocloud/music.mp3</Play>
-</Response>
+    <Play>https://s3.amazonaws.com/plivocloud/Trumpet.mp3</Play>
+</Response>>
 
 */

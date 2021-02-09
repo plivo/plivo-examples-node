@@ -7,16 +7,18 @@ app.use(express.static(__dirname + '/public'));
 
 // Generate a Play XML with the details of audio file to play during the call
 
-app.all('/play/', function(request, response) {
-    var r = plivo.Response();
+app.all('/play/', function(request, resp) {
 
-    r.addPlay("https://s3.amazonaws.com/plivocloud/Trumpet.mp3");
-    console.log (r.toXML());
+    var response = plivo.Response();
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var play_body = "https://s3.amazonaws.com/plivocloud/Trumpet.mp3";
+    response.addPlay(play_body);
+
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
+
 
 });
 

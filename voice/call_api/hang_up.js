@@ -1,28 +1,24 @@
+// Example for Call delete
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = {
-    'call_uuid': 'defb0706-86a6-11e4-b303-498d468c930b' // UUID of the call to be hung up
-};
+(function main() {
+    'use strict';
 
-// Prints the complete response
-p.hangup_call(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+    var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+    client.calls.hangup(
+        "eba53b9e-8fbd-45c1-9444-696d2172fbc8", // UUID of the call to be hung up
+    ).then(function(response) {
+        console.log(response);
+    }, function(err) {
+        console.error(err);
+    });
+})();
 
 /* 
 Sample successful output
-Status:  204
-API Response:
+No response
 
 Sample unsuccesful output
-Status:  404
-API Response:
- {  "api_id": "835fcb44-31cc-11e5-a541-22000afa85ca",
+{  "api_id": "835fcb44-31cc-11e5-a541-22000afa85ca",
     "error": "call not found" }
-
 */

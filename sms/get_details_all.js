@@ -1,69 +1,76 @@
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = { };
-
-p.get_messages(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+(function main() {
+    'use strict';
+    var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+    client.messages.list({
+        limit: 5,
+        offset: 0,
+    }).then(function(response) {
+        console.log(response);
+    }, );
+})();
 
 /*
-Sample Output
-Status:  200
-API Response:
- { api_id: '4cff1804-1a78-11e5-84ff-22000ac89064',
-  meta: 
-   { limit: 20,
-     next: '/v1/Account/XXXXXXXXXXXXXXX/Message/?limit=20&offset=20',
-     offset: 0,
-     previous: null,
-     total_count: 809 },
-  objects: 
-   [ { from_number: '14155069431',
-       message_direction: 'inbound',
-       message_state: 'delivered',
-       message_time: '2015-06-23 16:03:17+05:30',
-       message_type: 'sms',
-       message_uuid: '42f2e5d8-1993-11e5-a4b5-22000afd08f6',
-       resource_uri: '/v1/Account/XXXXXXXXXXXXXXX/Message/42f2e5d8-1993-11e5-a4b5-22000afd08f6/',
-       to_number: '12109206499',
-       total_amount: '0.00000',
-       total_rate: '0.00000',
-       units: 1 },
-     { from_number: '14155069431',
-       message_direction: 'outbound',
-       message_state: 'delivered',
-       message_time: '2015-06-23 16:01:13+05:30',
-       message_type: 'sms',
-       message_uuid: 'f909e73c-1992-11e5-96a7-22000ae98567',
-       resource_uri: '/v1/Account/XXXXXXXXXXXXXXX/Message/f909e73c-1992-11e5-96a7-22000ae98567/',
-       to_number: '12109206499',
-       total_amount: '0.00000',
-       total_rate: '0.00000',
-       units: 1 },
-     ] 
-    }
+Sample Output:
+ {
+  "api_id": "88415194-6df0-11e6-b608-06a72a185e87",
+  "meta": {
+	"limit": 2,
+	"next": "/v1/Account/{auth_id}/Message/?limit=20&error_code=200&offset=20",
+	"offset": 0,
+	"previous": null,
+	"total_count": 22
+  },
+  "objects": [
+	{
+	  "error_code": "200",
+	  "from_number": "18552828641",
+	  "message_direction": "outbound",
+	  "message_state": "failed",
+	  "message_time": "2016-08-17 21:26:44+05:30",
+	  "message_type": "sms",
+	  "message_uuid": "85ce8068-6fab-4f0a-9dc7-d6c852cdde91",
+	  "resource_uri": "/v1/Account/{auth_id}/Message/85ce8068-6fab-4f0a-9dc7-d6c852cdde91/",
+	  "to_number": "19352326448",
+	  "total_amount": "0.00000",
+	  "total_rate": "0.00350",
+	  "units": 1
+	},
+	{
+	  "error_code": "200",
+	  "from_number": "18552828641",
+	  "message_direction": "outbound",
+	  "message_state": "failed",
+	  "message_time": "2016-08-17 21:22:36+05:30",
+	  "message_type": "sms",
+	  "message_uuid": "2a340179-e8a9-4b1d-ae2c-9f346e7b6d7d",
+	  "resource_uri": "/v1/Account/{auth_id}/Message/2a340179-e8a9-4b1d-ae2c-9f346e7b6d7d/",
+	  "to_number": "19352326448",
+	  "total_amount": "0.00000",
+	  "total_rate": "0.00350",
+	  "units": 1
+	}
+  ]
 }
-
 */
 
 // Filtering the records
 
-var params1 = {
-    'limit': '2', // The number of results per page
-    'offset' : '0', // The number of value items by which the results should be offset
-    'message_state' : "delivered", // The state of the message to be filtered
-    'message_direction' : "inbound" // The direction of te message to be fltered
-};
+var plivo = require('plivo');
 
-p.get_messages(params1, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
+(function main() {
+    'use strict';
+    var client = new plivo.Client("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+    client.messages.list({
+        limit: 5, // The number of results per page
+        offset: 0, // The number of value items by which the results should be offset
+        message_state: 'delivered', // The state of the message to be filtered
+        message_direction: 'inbound' // The direction of te message to be fltered
+    }).then(function(response) {
+        console.log(response);
+    }, );
+})();
 
 /*
 Sample Output

@@ -8,68 +8,58 @@ app.use(express.static(__dirname + '/public'));
 // When the call is answered, a text is played which prompts the user to press 1 to transfer the call.
 // Once the digit is pressed, the transfer API request is made and the call is transfered to another number.
 
-app.all('/transfer_api/', function(request, response) {
-    var r = plivo.Response();
+app.all('/transfer_api/', function(request, resp) {
 
-    var params_getdigits = {
-        'action': "https://intense-brook-8241.herokuapp.com/transfer_action/", 
-        'method':"GET",
+    var response = plivo.Response();
+
+    var params = {
+        'action': "https://www.foo.com/transfer_action/",
+        'method': "GET",
         'timeout': "7",
         'numDigits': "1",
         'retries': "1",
         'redirect': "false"
     }
+    var get_digits = response.addGetDigits(params);
 
-    var getdigits = r.addGetDigits(params_getdigits);
-    getdigits.addSpeak("Press 1 to transfer this call");
-    r.add(getdigits);
+    var input_received_speak = "Press 1 to transfer the call";
+    get_digits.addSpeak(input_received_speak);
 
-    params_wait = {
-        'length' : "10"
-    };  
-    r.addWait(params_wait);
+    var input_not_received_speak = "Input not received. Thank you";
+    response.addSpeak(input_not_received_speak);
 
-    console.log (r.toXML());
+    console.log(response.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
 // The Transfer API is invoked by the Get Digits action URL
 
 app.all('/transfer_action/', function(request, response) {
-    var r = plivo.Response();
 
-    var params = {
-        'timeout' : "20", 
-        'action':"https://intense-brook-8241.herokuapp.com/dial_status/" 
-    }
 
-    var digit = request.param('Digits');
-    var call_uuid = request.param('CallUUID');
-    console.log ("Call UUID : " + call_uuid);
-    console.log ("Digit pressed : " + digit);
+    var digit = request.params('Digits');
+    var call_uuid = request.params('CallUUID');
+    console.log("Call UUID : " + call_uuid);
+    console.log("Digit pressed : " + digit);
 
-    var auth_id = "Your AUTH_ID";
-    var auth_token = "Your AUTH_TOKEN";
-
-    var p = plivo.RestAPI(auth_id,auth_token);
-
-    if (digit == "1"){
-        params = {
-            'call_uuid' : call_uuid,
-            'aleg_url' : "https://intense-brook-8241.herokuapp.com/connect/",
-            'aleg_method' : "GET"
-        }
-        p.transfer_call(params, function (status, response) {
-            console.log('Status: ', status);
-            console.log('API Response:\n', response);
+    var client = new plivo.Client();
+    if (digit == "1") {
+        client.calls.transfer(
+            call_uuid, // call uuid
+            {
+                legs: "aleg",
+                alegUrl: "http://aleg.url",
+            },
+        ).then(function(response) {
+            console.log(response);
+        }, function(err) {
+            console.error(err);
         });
-    }else {
-        console.log ("Wrong Input");
+    } else {
+        console.log("Wrong Input");
     }
 
 });
@@ -82,10 +72,9 @@ app.listen(app.get('port'), function() {
 /*
 Sample Output
 <Response>
-    <GetDigits action="http://morning-ocean-4669.herokuapp.com/transfer_action/" method="GET" numDigits="1" redirect="false" retries="1" timeout="7">
+    <GetDigits action="http://www.foo.com/transfer_action/" method="GET" numDigits="1" redirect="false" retries="1" timeout="7">
         <Speak>Press 1 to transfer this call</Speak>
     </GetDigits>
-    <Wait length="10" />
 </Response>
 
 Call UUID is : e66aa1a0-9587-11e4-9d37-c15e0b562efe 

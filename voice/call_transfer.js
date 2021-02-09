@@ -5,39 +5,37 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.all('/call_transfer/', function(request, response) {
-    var r = plivo.Response();
-   
-    r.addSpeak('Please wait while your call is being transferred');
-    r.addRedirect("https://intense-brook-8241.herokuapp.com/connect/");
-    console.log (r.toXML());
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+app.all('/call_transfer/', function(request, resp) {
+    var response = plivo.Response();
+
+    var speak_body = "Please wait while you call is being transferred.";
+    response.addSpeak(speak_body);
+
+    var redirect_url = "https://www.foo.com/redirect/";
+    response.addRedirect(redirect_url);
+
+    console.log(response.toXML());
+
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 
 });
 
-app.all('/connect/', function(request, response) {
-    var r = plivo.Response();
+app.all('/connect/', function(request, resp) {
+    var response = plivo.Response();
 
     var params = {
-        'action' : "https://intense-brook-8241.herokuapp.com/dial_status/",
-        'method' : "5",
-        'redirect' : "true"
+        'dialMusic': "real"
     };
-   
-    r.addSpeak('Connecting your call');
-    var d = r.addDial(params);
-    d.addNumber("1111111111");
-    console.log (r.toXML());
+    var dial = response.addDial(params);
 
-    response.set({
-        'Content-Type': 'text/xml'
-    });
-    response.end(r.toXML());
+    var number = "1111111111";
+    dial.addNumber(number);
 
+    console.log(response.toXML());
+    resp.setHeader("Content-Type", "text/xml");
+    resp.end(response.toXML());
 });
 
 app.listen(app.get('port'), function() {
@@ -48,14 +46,13 @@ app.listen(app.get('port'), function() {
 /*
 Sample output for Redirect XML
 <Response>
-    <Speak>Please wait while you call is being transferred</Speak>
-    <Redirect>https://intense-brook-8241.herokuapp.com/connect/</Redirect>
+    <Speak>Please wait while you call is being transferred.</Speak>
+    <Redirect>https://www.foo.com/redirect/</Redirect>
 </Response>
 
 Sample output for Dial XML
 <Response>
-    <Speak>Connecting your call..</Speak>
-    <Dial action="https://morning-ocean-4669.herokuapp.com/dial_status/" method="GET" redirect="true">
+    <Dial dialMusic="real">
         <Number>1111111111</Number>
     </Dial>
 </Response>

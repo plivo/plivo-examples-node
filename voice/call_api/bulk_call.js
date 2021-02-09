@@ -1,31 +1,32 @@
 var plivo = require('plivo');
-var p = plivo.RestAPI({
-  authId: 'Your AUTH_ID',
-  authToken: 'Your AUTH_TOKEN'
-});
 
-var params = {
-    'to': '2222222222<3333333333', // The phone numer to which the all has to be placed
-    'from' : '1111111111', // The phone number to be used as the caller id
-    'answer_url' : "https://intense-brook-8241.herokuapp.com/speak/", // The URL invoked by Plivo when the outbound call is answered
-    'answer_method' : "GET", // The method used to call the answer_url
-};
+(function main() {
+    'use strict';
+    
+    var client = new plivo.Client("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+    
+    client.calls.create(
+        "+14151234567", // The phone number to be used as the caller id
+        "+15671234567<+15671238976",  // The phone numer to which the all has to be placed
+        "http://s3.amazonaws.com/static.plivo.com/answer.xml", // The URL invoked by Plivo when the outbound call is answered
+        {
+            answerMethod: "GET", // The method used to call the answer_url
+        },
+    ).then(function (response) {
+        console.log(response);
+    }, function (err) {
+        console.error(err);
+    });
+})();
 
-// Prints the complete response
-p.make_call(params, function (status, response) {
-    console.log('Status: ', status);
-    console.log('API Response:\n', response);
-});
 
 /* 
 Sample Output
 
-Status:  201
-API Response:
- { api_id: '294b50e6-3137-11e5-bfa2-22000afaa73b',
+{
+  apiId: '4b08ceef-5c80-11eb-b94b-0242ac110004',
   message: 'calls fired',
-  request_uuid: 
-   [ 'ce7b6a31-ebcb-419f-8863-862d79168fb7',
-     '3e6fcedb-bf3d-45eb-bfbc-454b31b2d113' ] }
-
+  requestUuid:
+   [ '922e6f63-0130-40e2-98d4-9156454a2e62',
+     '36ef1bc5-4f99-4c8c-8090-3c4db4f7864b' ] }
 */
