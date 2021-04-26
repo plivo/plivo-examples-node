@@ -7,8 +7,8 @@ var plivo = require('plivo');
         "+14151113333", // Sender's phone number with country code
         "+14151112222", // Receiver's phone Number with country code
         "Hello, this is a sample text from Plivo", // Your SMS Text Message - English
-        // "こんにちは、元気ですか？" // Your SMS Text Message - Japanese
-        // "Ce est texte généré aléatoirement" // Your SMS Text Message - French
+        // "こんにちは、元気ですか？", // Your SMS Text Message - Japanese
+        // "Ce est texte généré aléatoirement", // Your SMS Text Message - French
         {
             method: "GET", // Method used to trigger message URL.
             url: "http://foo.com/sms_status/" // The URL to which with the status of the message is sent
